@@ -7,6 +7,7 @@
 
 import Foundation
 import Photos
+import UIKit
 
 public protocol TLPhotopickerDataSourcesProtocol {
     func headerReferenceSize() -> CGSize

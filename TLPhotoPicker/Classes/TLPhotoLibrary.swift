@@ -8,6 +8,7 @@
 
 import Foundation
 import Photos
+import UIKit
 
 protocol TLPhotoLibraryDelegate: class {
     func loadCameraRollCollection(collection: TLAssetsCollection)
@@ -53,6 +54,12 @@ class TLPhotoLibrary {
             completionBlock(playerItem,info)
         })
         return requestID
+    }
+    
+    @discardableResult
+    func imageAsset(asset: TLPHAsset, size: CGSize = CGSize(width: 160, height: 160), options: PHImageRequestOptions? = nil, completionBlock:@escaping (UIImage,Bool)-> Void ) -> PHImageRequestID {
+        // TODO: customize
+        return imageAsset(asset: asset.phAsset!, size: size, options: options, completionBlock: completionBlock)
     }
     
     @discardableResult

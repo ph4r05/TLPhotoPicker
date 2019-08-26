@@ -38,7 +38,7 @@ extension TLAssetsCollection {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = groupedBy.dateFormat
         var assets = [PHAsset]()
-        assets.reserveCapacity(self.fetchResult?.count ?? 0)
+        assets.reserveCapacity(self.fetchCount ?? 0)
         self.fetchResult?.enumerateObjects({ (phAsset, idx, stop) in
             if phAsset.creationDate != nil {
                 assets.append(phAsset)

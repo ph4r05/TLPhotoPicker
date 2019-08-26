@@ -1052,7 +1052,7 @@ extension TLPhotosPickerViewController: UITableViewDelegate,UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: "TLCollectionTableViewCell", for: indexPath) as! TLCollectionTableViewCell
         let collection = self.collections[indexPath.row]
         cell.titleLabel.text = collection.title
-        cell.subTitleLabel.text = "\(collection.fetchResult?.count ?? 0)"
+        cell.subTitleLabel.text = "\(collection.fetchCount ?? 0)"
         if let phAsset = collection.getAsset(at: collection.useCameraButton ? 1 : 0) {
             let scale = UIScreen.main.scale
             let size = CGSize(width: 80*scale, height: 80*scale)

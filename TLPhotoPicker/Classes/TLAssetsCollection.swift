@@ -17,7 +17,7 @@ public struct TLPHAsset {
     }
     
     public enum AssetType {
-        case photo, video, livePhoto
+        case photo, video, livePhoto, custom
     }
     
     public enum ImageExtType: String {
@@ -25,12 +25,20 @@ public struct TLPHAsset {
     }
     
     var state = CloudDownloadState.ready
+    public var customImage: Bool = false
+    public var customName: String!
+    public var imageObj: UIImage!
+    
     public var phAsset: PHAsset? = nil
     //Bool to check if TLPHAsset returned is created using camera.
     public var isSelectedFromCamera = false
     public var selectedOrder: Int = 0
     public var type: AssetType {
         get {
+            if self.customImage {
+                return .custom
+            }
+            
             guard let phAsset = self.phAsset else { return .photo }
             if phAsset.mediaSubtypes.contains(.photoLive) {
                 return .livePhoto
@@ -44,6 +52,10 @@ public struct TLPHAsset {
     
     public var fullResolutionImage: UIImage? {
         get {
+            if customImage {
+                return imageObj
+            }
+            
             guard let phAsset = self.phAsset else { return nil }
             return TLPhotoLibrary.fullResolutionImageData(asset: phAsset)
         }
@@ -65,6 +77,9 @@ public struct TLPHAsset {
     
     public var originalFileName: String? {
         get {
+            if customImage {
+                return customName
+            }
             guard let phAsset = self.phAsset,let resource = PHAssetResource.assetResources(for: phAsset).first else { return nil }
             return resource.originalFilename
         }
@@ -274,6 +289,12 @@ public struct TLPHAsset {
     init(asset: PHAsset?) {
         self.phAsset = asset
     }
+    
+    init(image: UIImage, name: String?){
+        customImage = true
+        customName = name
+        imageObj = image
+    }
 
     public static func asset(with localIdentifier: String) -> TLPHAsset? {
         let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil)
@@ -301,11 +322,19 @@ public struct TLAssetsCollection {
     var recentPosition: CGPoint = CGPoint.zero
     var title: String
     var localIdentifier: String
+    var isCustom: Bool = false
+    
     public var sections: [(title: String, assets: [TLPHAsset])]? = nil
     var count: Int {
         get {
             guard let count = self.fetchResult?.count, count > 0 else { return self.useCameraButton ? 1 : 0 }
             return count + (self.useCameraButton ? 1 : 0)
+        }
+    }
+    
+    var fetchCount: Int? {
+        get {
+            return self.fetchResult?.count
         }
     }
     
